@@ -35,8 +35,8 @@ const Report = () => {
       console.log('📊 Total Breaches:', scanResult.totalBreaches)
       console.log('📊 Sources:', scanResult.sources)
       if (scanResult.breaches) {
-        console.log('🔴 XposedOrNot breaches:', scanResult.breaches.filter((b: any) => b.source === 'XposedOrNot'))
-        console.log('🟣 LeakIX breaches:', scanResult.breaches.filter((b: any) => b.source === 'LeakIX'))
+        console.log('🔴 XposedOrNot breaches:', scanResult.breaches?.filter((b: any) => b.source === 'XposedOrNot'))
+        console.log('🟣 LeakIX breaches:', scanResult.breaches?.filter((b: any) => b.source === 'LeakIX'))
       }
     }
   }, [scanResult, navigate])
@@ -57,11 +57,11 @@ const Report = () => {
   // Veriyi hazırla
   const {  email, breaches, profile, totalBreaches, riskScore, sources } = scanResult
   const scoreData = getScoreData(riskScore)
-  const displayedBreaches = showAll ? breaches : breaches.slice(0, 10)
+  const displayedBreaches = showAll ? breaches : breaches?.slice(0, 10)
 
   // İlk sızıntı yılını bul
-  const firstBreachYear = breaches.length > 0
-    ? breaches.reduce((min: number, breach: any) => {
+  const firstBreachYear = breaches?.length > 0
+    ? breaches?.reduce((min: number, breach: any) => {
         if (!breach.date) return min
         const year = parseInt(breach.date.split('-')[0])
         return year < min ? year : min
@@ -303,7 +303,7 @@ const Report = () => {
               E-postanız hiçbir bilinen veri sızıntısında bulunmuyor.
             </p>
           </motion.div>
-        ) : breaches.length > 0 && (
+        ) : breaches?.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -311,11 +311,11 @@ const Report = () => {
             className="mb-8"
           >
             <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              Bulunan Veri Sızıntıları ({breaches.length})
+              Bulunan Veri Sızıntıları ({breaches?.length})
             </h2>
             
             <div className="space-y-3">
-              {displayedBreaches.map((breach: any, index: number) => {
+              {displayedBreaches?.map((breach: any, index: number) => {
                 // Kaynak bazlı renk ve icon - APPLE STYLE
                 const getSourceConfig = () => {
                   if (breach.source === 'XposedOrNot') return { 
@@ -460,7 +460,7 @@ const Report = () => {
               })}
             </div>
 
-            {breaches.length > 10 && (
+            {breaches?.length > 10 && (
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -475,7 +475,7 @@ const Report = () => {
         )}
 
         {/* GRAVATAR PROFİLİ */}
-        {profile && profile.hasProfile && (
+        {profile && profile?.hasProfile && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -486,33 +486,33 @@ const Report = () => {
               📧 E-posta Profili (Gravatar)
             </h2>
             <div className="flex items-start space-x-6">
-              {profile.avatarUrl && (
+              {profile?.avatarUrl && (
                 <img 
-                  src={profile.avatarUrl} 
-                  alt={profile.displayName || 'Profile'} 
+                  src={profile?.avatarUrl} 
+                  alt={profile?.displayName || 'Profile'} 
                   className="w-24 h-24 rounded-full border-4 border-gray-100"
                 />
               )}
               <div className="flex-1">
-                {profile.displayName && (
+                {profile?.displayName && (
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    {profile.displayName}
+                    {profile?.displayName}
                   </h3>
                 )}
-                {profile.username && (
-                  <p className="text-gray-600 mb-2">@{profile.username}</p>
+                {profile?.username && (
+                  <p className="text-gray-600 mb-2">@{profile?.username}</p>
                 )}
-                {profile.location && (
-                  <p className="text-sm text-gray-500 mb-2">📍 {profile.location}</p>
+                {profile?.location && (
+                  <p className="text-sm text-gray-500 mb-2">📍 {profile?.location}</p>
                 )}
-                {profile.description && (
-                  <p className="text-gray-700 mt-3">{profile.description}</p>
+                {profile?.description && (
+                  <p className="text-gray-700 mt-3">{profile?.description}</p>
                 )}
-                {profile.accounts && profile.accounts.length > 0 && (
+                {profile?.accounts && profile?.accounts?.length > 0 && (
                   <div className="mt-4">
                     <p className="text-sm text-gray-600 mb-2">Bağlı hesaplar:</p>
                     <div className="flex flex-wrap gap-2">
-                      {profile.accounts.map((account: any, idx: number) => (
+                      {profile?.accounts?.map((account: any, idx: number) => (
                         <a
                           key={idx}
                           href={account.url}

@@ -89,11 +89,11 @@ module.exports = async (req, res) => {
 
     return res.status(200).json({
       email,
-      breaches,
-      breachCount: breaches.length,
-      leakixLeaks,
-      leakixCount: leakixLeaks.length,
-      gravatar,
+      breaches: breaches || [],
+      breachCount: (breaches || []).length,
+      leakixLeaks: leakixLeaks || [],
+      leakixCount: (leakixLeaks || []).length,
+      gravatar: gravatar || null,
       riskScore
     });
 
