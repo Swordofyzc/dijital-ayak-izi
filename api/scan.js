@@ -1,19 +1,9 @@
 /**
- * Express.js Backend Server
+ * Vercel Serverless Function
  * Dijital Ayak İzi Tarayıcı API
  */
 
-import 'dotenv/config'
-import express from 'express'
-import cors from 'cors'
 import crypto from 'crypto'
-
-const app = express()
-const PORT = process.env.PORT || 3001
-
-// Middleware
-app.use(cors())
-app.use(express.json())
 
 // XposedOrNot Scan
 async function scanXposedOrNot(email) {
@@ -324,15 +314,29 @@ function calculateRiskScore(breachCount) {
   return 20
 }
 
-// API Route: /api/scan
-app.post('/api/scan', async (req, res) => {
+// Vercel Serverless Function
+module.exports = async (req, res) => {
+  // CORS Headers
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+
+  // Handle OPTIONS request (preflight)
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end()
+  }
+
+  // Only allow POST
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
+
   try {
     console.log('\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
     console.log('🚀 YENİ TARAMA BAŞLADI!')
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
     console.log('📧 Email:', req.body?.email)
     console.log('⏰ Zaman:', new Date().toLocaleTimeString())
-    console.log('📍 IP:', req.ip || req.connection.remoteAddress)
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
 
     const { email } = req.body
@@ -394,7 +398,7 @@ app.post('/api/scan', async (req, res) => {
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
     console.log('✅ Response gönderiliyor...\n\n')
 
-    res.json({
+    return res.status(200).json({
       email,
       breaches: allBreaches,
       profile: gravatarResults,
@@ -413,40 +417,11 @@ app.post('/api/scan', async (req, res) => {
     console.error('🔴 Message:', error.message)
     console.error('🔴 Stack:', error.stack)
     console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n')
-    res.status(500).json({ 
+    
+    return res.status(500).json({ 
       error: 'Tarama sırasında hata oluştu',
       message: error.message 
     })
   }
-})
-
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK',
-    timestamp: new Date().toISOString(),
-    env: {
-      leakix: !!process.env.LEAKIX_API_KEY,
-      port: process.env.PORT || 3001
-    }
-  })
-})
-
-// Server başlat
-app.listen(PORT, '127.0.0.1', () => {
-  console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-  console.log('🔥 BACKEND SERVER BAŞLADI')
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-  console.log(`📡 Port: ${PORT}`)
-  console.log(`🔒 Bind: 127.0.0.1 (SADECE LOCAL - GÜVENLİ!)`)
-  console.log(`🌐 Local: http://localhost:${PORT}`)
-  console.log(`🔌 API: http://localhost:${PORT}/api/scan`)
-  console.log(`💚 Health: http://localhost:${PORT}/api/health`)
-  console.log('\n🔑 API Keys:')
-  console.log('  LeakIX:', process.env.LEAKIX_API_KEY ? '✅ Yüklü' : '❌ Eksik')
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-  console.log('📌 Aktif API\'ler: XposedOrNot, LeakIX, Gravatar')
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
-  console.log('⏳ İstekleri bekliyorum...\n')
-})
+}
 

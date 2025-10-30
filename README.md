@@ -1,11 +1,12 @@
-# 🔍 Dijital Ayak İzi Tarayıcı
+🔥 YENİ README.md:
+markdown# 🔍 Dijital Ayak İzi Tarayıcı
 
 E-posta adresinizin bilinen veri sızıntılarında olup olmadığını kontrol edin. Modern, hızlı ve güvenli.
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![React](https://img.shields.io/badge/React-18-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
-![Node](https://img.shields.io/badge/Node.js-18+-green)
+![Vercel](https://img.shields.io/badge/Vercel-Serverless-black)
 
 ## ✨ Özellikler
 
@@ -33,9 +34,8 @@ E-posta adresinizin bilinen veri sızıntılarında olup olmadığını kontrol 
 - Vite (Build tool)
 
 ### Backend
+- Vercel Serverless Functions
 - Node.js
-- Express
-- CORS
 - Axios
 
 ## 🚀 Kurulum
@@ -59,22 +59,12 @@ npm install
 
 3. **Environment variables ayarlayın**
 
-`.env` dosyası oluşturun (opsiyonel):
+`.env` dosyası oluşturun (local test için - opsiyonel):
 ```env
 LEAKIX_API_KEY=your_api_key_here
-PORT=3001
 ```
 
 4. **Development modda çalıştırın**
-
-İki ayrı terminal açın:
-
-**Terminal 1 - Backend:**
-```bash
-npm run server:watch
-```
-
-**Terminal 2 - Frontend:**
 ```bash
 npm run dev
 ```
@@ -84,17 +74,20 @@ npm run dev
 http://localhost:5173
 ```
 
-## 📦 Production Build
+## 🌐 Deploy (Vercel)
 
-### Frontend
-```bash
-npm run build
-```
+### Hızlı Deploy
 
-### Backend
-```bash
-npm run server:start
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/swordofyzc/dijital-ayak-izi)
+
+### Manuel Deploy
+
+1. GitHub reposunu Vercel'e import edin
+2. Environment Variable ekleyin:
 ```
+   LEAKIX_API_KEY=your_api_key_here
+```
+3. Deploy butonuna basın!
 
 ## 🎨 Ekran Görüntüleri
 
@@ -179,19 +172,32 @@ Projeyi beğendiyseniz yıldız vermeyi unutmayın! ⭐
 dijital-ayak-izi/
 ├── src/
 │   ├── components/     # Reusable components
-│   ├── pages/         # Ana sayfalar
-│   ├── services/      # API servisleri
-│   └── types/         # TypeScript types
-├── server/
-│   └── index.js       # Express backend
-└── public/            # Static files
+│   ├── pages/         # Ana sayfalar (Home, Scan, Report)
+│   └── App.tsx        # Main app component
+├── api/
+│   └── scan.js        # Vercel Serverless Function
+├── public/            # Static files
+└── vercel.json        # Vercel configuration
 ```
 
 ### API Endpoints
 
 **POST /api/scan**
-- Body: `{ email: string }`
-- Response: ScanResult object
+- **Platform**: Vercel Serverless Function
+- **Body**: `{ email: string }`
+- **Response**: 
+```json
+{
+  "email": "user@example.com",
+  "breaches": ["Breach1", "Breach2"],
+  "breachCount": 2,
+  "leakixLeaks": [...],
+  "leakixCount": 5,
+  "gravatar": {...},
+  "riskScore": 70
+}
+```
+- **Environment Variable**: `LEAKIX_API_KEY`
 
 ## 🔮 Gelecek Özellikler
 

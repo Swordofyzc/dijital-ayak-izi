@@ -34,7 +34,7 @@ const Scan = () => {
         console.log('📡 Backend URL: http://localhost:3001/api/scan')
         
         // Backend API'ye DOĞRUDAN istek at
-        const response = await fetch('http://localhost:3001/api/scan', {
+        const response = await fetch('/api/scan', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
