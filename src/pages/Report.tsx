@@ -55,18 +55,9 @@ const Report = () => {
   }
 
   // Veriyi hazırla
-  const {  email, breaches, profile, totalBreaches, riskScore, sources } = scanResult
+  const {  email, breaches, profile, totalBreaches, riskScore } = scanResult
   const scoreData = getScoreData(riskScore)
   const displayedBreaches = showAll ? breaches : (breaches || []).slice(0, 10)
-
-  // İlk sızıntı yılını bul
-  const firstBreachYear = (breaches || []).length > 0
-    ? (breaches || []).reduce((min: number, breach: any) => {
-        if (!breach.date) return min
-        const year = parseInt(breach.date.split('-')[0])
-        return year < min ? year : min
-      }, 9999)
-    : null
 
   // Öneriler
   const recommendations = [
