@@ -33,7 +33,35 @@ const Scan = () => {
         console.log(`🚀 Backend'e tarama isteği gönderiliyor: ${email}`)
         console.log('📡 Backend URL: /api/scan')
         
-        // Backend API'ye DOĞRUDAN istek at
+        // Frontend'den XposedOrNot (Cloudflare bypass)
+        let xposedBreaches: any[] = []
+        try {
+          const xposedRes = await fetch(
+            `https://passwords.xposedornot.com/v1/breachedaccount/${email}`,
+            {
+              headers: {
+                'Accept': 'application/json'
+              }
+            }
+          )
+          
+          if (xposedRes.ok) {
+            const xposedData = await xposedRes.json()
+            if (xposedData.breaches_details) {
+              xposedBreaches = xposedData.breaches_details.split(' ').filter((b: string) => b).map((name: string) => ({
+                name: name,
+                source: 'XposedOrNot',
+                date: 'Tarih Bilinmiyor',
+                description: `${name} veri sızıntısında bulundu`,
+                dataClasses: []
+              }))
+            }
+          }
+        } catch (err) {
+          console.log('XposedOrNot error:', err)
+        }
+        
+        // Backend API'ye DOĞRUDAN istek at (LeakIX için)
         const response = await fetch('/api/scan', {
           method: 'POST',
           headers: {
@@ -51,6 +79,10 @@ const Scan = () => {
         }
 
         const result = await response.json()
+        
+        // XposedOrNot sonuçlarını ekle
+        result.breaches = [...xposedBreaches, ...(result.breaches || [])]
+        result.totalBreaches = result.breaches.length
         
         console.log('✅ Backend tarama tamamlandı:', result)
         console.log('📦 Toplam breach:', result.totalBreaches)
