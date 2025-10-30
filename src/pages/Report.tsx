@@ -416,12 +416,37 @@ const Report = () => {
                       </span>
                     </div>
 
-                    {/* Description */}
-                    {breach.description && (
-                      <p className="text-sm text-gray-700 mb-4 leading-relaxed">
-                        {breach.description}
-                      </p>
-                    )}
+                    {/* Description / Detay Bilgisi */}
+                    <div className="mb-4">
+                      {breach.description ? (
+                        <p className="text-sm text-gray-700 leading-relaxed">
+                          {breach.description}
+                        </p>
+                      ) : (
+                        <div className="text-sm text-gray-700 space-y-2">
+                          <p className="leading-relaxed">
+                            Bu e-posta adresi <strong>{breach.name}</strong> veri sızıntısında tespit edildi.
+                          </p>
+                          <div className="flex flex-col gap-1 text-xs text-gray-600 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold">📅 Tarih:</span>
+                              <span>{breach.date}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold">🔍 Kaynak:</span>
+                              <span>{breach.source}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold">⚠️ Durum:</span>
+                              <span className="text-red-600 font-semibold">Sızıntıda Bulundu</span>
+                            </div>
+                          </div>
+                          <p className="text-xs text-gray-600 mt-2">
+                            <strong>💡 Önerilen:</strong> Bu hesap için şifrenizi hemen değiştirin ve iki faktörlü doğrulamayı aktif edin.
+                          </p>
+                        </div>
+                      )}
+                    </div>
 
                     {/* Data Classes */}
                     {breach.dataClasses && breach.dataClasses.length > 0 && (

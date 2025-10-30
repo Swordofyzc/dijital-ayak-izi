@@ -28,7 +28,10 @@ module.exports = async (req, res) => {
       const xposedRes = await axios.get(
         `https://passwords.xposedornot.com/v1/breachedaccount/${email}`,
         { 
-          headers: { 'X-Api-Key': leakixKey },
+          headers: { 
+            'api-key': leakixKey,
+            'User-Agent': 'DijitalAyakIzi/1.0'
+          },
           timeout: 10000
         }
       );
