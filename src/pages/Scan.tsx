@@ -37,7 +37,7 @@ const Scan = () => {
         let xposedBreaches: any[] = []
         try {
           const xposedRes = await fetch(
-            `https://passwords.xposedornot.com/v1/breachedaccount/${email}`,
+            `https://api.xposedornot.com/v1/check-email/${email}`,
             {
               headers: {
                 'Accept': 'application/json'
@@ -47,8 +47,11 @@ const Scan = () => {
           
           if (xposedRes.ok) {
             const xposedData = await xposedRes.json()
-            if (xposedData.breaches_details) {
-              xposedBreaches = xposedData.breaches_details.split(' ').filter((b: string) => b).map((name: string) => ({
+            
+            // Response format: { "breaches": [["Breach1", "Breach2", ...]] }
+            if (xposedData.breaches && Array.isArray(xposedData.breaches) && xposedData.breaches.length > 0) {
+              const breachList = xposedData.breaches[0] // İlk array'i al
+              xposedBreaches = breachList.filter((b: string) => b).map((name: string) => ({
                 name: name,
                 source: 'XposedOrNot',
                 date: 'Tarih Bilinmiyor',
