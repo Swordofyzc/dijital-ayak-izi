@@ -1,23 +1,4 @@
-const https = require('https');
-
-function httpsRequest(url, options = {}) {
-  return new Promise((resolve, reject) => {
-    const req = https.request(url, options, (res) => {
-      let data = '';
-      res.on('data', (chunk) => { data += chunk; });
-      res.on('end', () => {
-        try {
-          resolve({ status: res.statusCode, data: JSON.parse(data) });
-        } catch {
-          resolve({ status: res.statusCode, data: data });
-        }
-      });
-    });
-    req.on('error', reject);
-    if (options.body) req.write(options.body);
-    req.end();
-  });
-}
+const axios = require('axios');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -44,14 +25,16 @@ module.exports = async (req, res) => {
     // XposedOrNot taraması
     let breaches = [];
     try {
-      const xposedUrl = `https://passwords.xposedornot.com/v1/breachedaccount/${email}`;
-      const xposedRes = await httpsRequest(xposedUrl, {
-        method: 'GET',
-        headers: { 'X-Api-Key': leakixKey }
-      });
+      const xposedRes = await axios.get(
+        `https://passwords.xposedornot.com/v1/breachedaccount/${email}`,
+        { 
+          headers: { 'X-Api-Key': leakixKey },
+          timeout: 10000
+        }
+      );
       
-      if (xposedRes.status === 200 && xposedRes.data.breaches_details) {
-        breaches = xposedRes.data.breaches_details.split(' ');
+      if (xposedRes.data && xposedRes.data.breaches_details) {
+        breaches = xposedRes.data.breaches_details.split(' ').filter(b => b);
       }
     } catch (err) {
       console.log('XposedOrNot error:', err.message);
@@ -60,13 +43,15 @@ module.exports = async (req, res) => {
     // LeakIX taraması
     let leakixLeaks = [];
     try {
-      const leakixUrl = `https://leakix.net/search?scope=leak&q=${email}`;
-      const leakixRes = await httpsRequest(leakixUrl, {
-        method: 'GET',
-        headers: { 'api-key': leakixKey }
-      });
+      const leakixRes = await axios.get(
+        `https://leakix.net/search?scope=leak&q=${encodeURIComponent(email)}`,
+        { 
+          headers: { 'api-key': leakixKey },
+          timeout: 10000
+        }
+      );
       
-      if (leakixRes.status === 200 && Array.isArray(leakixRes.data)) {
+      if (Array.isArray(leakixRes.data)) {
         leakixLeaks = leakixRes.data;
       }
     } catch (err) {
@@ -76,11 +61,11 @@ module.exports = async (req, res) => {
     // Gravatar
     let gravatar = null;
     try {
-      const gravatarUrl = `https://www.gravatar.com/${email}.json`;
-      const gravatarRes = await httpsRequest(gravatarUrl, { method: 'GET' });
-      if (gravatarRes.status === 200) {
-        gravatar = gravatarRes.data;
-      }
+      const gravatarRes = await axios.get(
+        `https://www.gravatar.com/${email}.json`,
+        { timeout: 5000 }
+      );
+      gravatar = gravatarRes.data;
     } catch (err) {
       console.log('Gravatar error:', err.message);
     }
@@ -90,10 +75,10 @@ module.exports = async (req, res) => {
     return res.status(200).json({
       email,
       breaches: breaches || [],
-      breachCount: (breaches || []).length,
+      breachCount: breaches.length,
       leakixLeaks: leakixLeaks || [],
-      leakixCount: (leakixLeaks || []).length,
-      gravatar: gravatar || null,
+      leakixCount: leakixLeaks.length,
+      gravatar,
       riskScore
     });
 

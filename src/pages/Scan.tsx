@@ -31,7 +31,7 @@ const Scan = () => {
     const scanEmail = async () => {
       try {
         console.log(`🚀 Backend'e tarama isteği gönderiliyor: ${email}`)
-        console.log('📡 Backend URL: http://localhost:3001/api/scan')
+        console.log('📡 Backend URL: /api/scan')
         
         // Backend API'ye DOĞRUDAN istek at
         const response = await fetch('/api/scan', {
