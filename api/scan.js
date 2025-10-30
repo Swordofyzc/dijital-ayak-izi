@@ -34,7 +34,14 @@ module.exports = async (req, res) => {
       );
       
       if (xposedRes.data && xposedRes.data.breaches_details) {
-        breaches = xposedRes.data.breaches_details.split(' ').filter(b => b);
+        const breachNames = xposedRes.data.breaches_details.split(' ').filter(b => b);
+        breaches = breachNames.map(name => ({
+          name: name,
+          source: 'XposedOrNot',
+          date: 'Bilinmiyor',
+          description: `${name} veri sızıntısında bulundu`,
+          dataClasses: []
+        }));
       }
     } catch (err) {
       console.log('XposedOrNot error:', err.message);
@@ -52,7 +59,13 @@ module.exports = async (req, res) => {
       );
       
       if (Array.isArray(leakixRes.data)) {
-        leakixLeaks = leakixRes.data;
+        leakixLeaks = leakixRes.data.map(leak => ({
+          name: leak.event_source || 'LeakIX',
+          source: 'LeakIX',
+          date: leak.time || 'Bilinmiyor',
+          description: leak.summary || 'LeakIX veritabanında bulundu',
+          dataClasses: leak.leak_data || []
+        }));
       }
     } catch (err) {
       console.log('LeakIX error:', err.message);
@@ -74,12 +87,13 @@ module.exports = async (req, res) => {
 
     return res.status(200).json({
       email,
-      breaches: breaches || [],
+      breaches: [...(breaches || []), ...(leakixLeaks || [])],
       breachCount: breaches.length,
       leakixLeaks: leakixLeaks || [],
       leakixCount: leakixLeaks.length,
       gravatar,
-      riskScore
+      riskScore,
+      totalBreaches: breaches.length + leakixLeaks.length
     });
 
   } catch (error) {
