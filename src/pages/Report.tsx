@@ -45,53 +45,53 @@ const Report = () => {
     return null
   }
 
-  // Risk skoru hesapla (iyileştirilmiş)
+  // Risk skoru hesapla (100 = en iyi, 0 = en kötü)
   const calculateRiskScore = () => {
     const breachCount = scanResult.breaches?.length || 0
     
-    if (breachCount === 0) return 0
-    if (breachCount <= 2) return 25  // Düşük risk
-    if (breachCount <= 5) return 50  // Orta risk
-    if (breachCount <= 10) return 75 // Yüksek risk
-    return 100 // Kritik risk
+    if (breachCount === 0) return 100    // Mükemmel
+    if (breachCount <= 2) return 75      // İyi
+    if (breachCount <= 5) return 50      // Orta
+    if (breachCount <= 10) return 25     // Kötü
+    return 0 // Çok Kötü
   }
 
   // Risk seviyesi bilgisi
   const getRiskLevel = (score: number) => {
-    if (score === 0) return { 
-      risk: 'Güvenli', 
+    if (score === 100) return { 
+      risk: 'Mükemmel', 
       emoji: '✅', 
       color: 'from-green-500 to-emerald-500', 
       textColor: 'text-green-600',
       bg: 'bg-green-50',
       message: 'E-postanız hiçbir veri sızıntısında bulunmamış!' 
     }
-    if (score <= 25) return { 
-      risk: 'Düşük Risk', 
+    if (score >= 75) return { 
+      risk: 'İyi', 
       emoji: '🟢', 
+      color: 'from-blue-500 to-cyan-500', 
+      textColor: 'text-blue-600',
+      bg: 'bg-blue-50',
+      message: 'Az sayıda sızıntı tespit edildi. Şifrelerinizi güncelleyin.' 
+    }
+    if (score >= 50) return { 
+      risk: 'Orta', 
+      emoji: '🟡', 
       color: 'from-yellow-500 to-amber-500', 
       textColor: 'text-yellow-600',
       bg: 'bg-yellow-50',
-      message: 'Az sayıda sızıntı tespit edildi. Şifrelerinizi güncelleyin.' 
-    }
-    if (score <= 50) return { 
-      risk: 'Orta Risk', 
-      emoji: '🟡', 
-      color: 'from-orange-500 to-amber-500', 
-      textColor: 'text-orange-600',
-      bg: 'bg-orange-50',
       message: 'Orta düzeyde risk var. Hemen önlem alın!' 
     }
-    if (score <= 75) return { 
-      risk: 'Yüksek Risk', 
+    if (score >= 25) return { 
+      risk: 'Kötü', 
       emoji: '🔴', 
-      color: 'from-red-500 to-red-600', 
-      textColor: 'text-red-600',
-      bg: 'bg-red-50',
+      color: 'from-orange-500 to-red-500', 
+      textColor: 'text-orange-600',
+      bg: 'bg-orange-50',
       message: 'Yüksek risk! Tüm şifrelerinizi değiştirin.' 
     }
     return { 
-      risk: 'Kritik Risk', 
+      risk: 'Çok Kötü', 
       emoji: '❌', 
       color: 'from-red-600 to-red-800', 
       textColor: 'text-red-800',
