@@ -25,33 +25,22 @@ module.exports = async (req, res) => {
     // XposedOrNot taraması
     let breaches = [];
     try {
-      console.log('🔍 XposedOrNot isteği gönderiliyor...');
       const xposedRes = await axios.get(
-        `https://passwords.xposedornot.com/v1/breachedaccount/${email}`,
-        { 
-          headers: { 
-            'api-key': leakixKey,
-            'User-Agent': 'DijitalAyakIzi/1.0'
-          },
-          timeout: 10000
-        }
+        `https://passwords.xposedornot.com/v1/breachedaccount/${email}`
       );
-      
-      console.log('✅ XposedOrNot response:', xposedRes.data);
       
       if (xposedRes.data && xposedRes.data.breaches_details) {
         const breachNames = xposedRes.data.breaches_details.split(' ').filter(b => b);
         breaches = breachNames.map(name => ({
-          name: name.charAt(0).toUpperCase() + name.slice(1),
+          name: name,
           source: 'XposedOrNot',
           date: 'Tarih Bilinmiyor',
-          description: `${name} veri ihlalinde e-posta adresiniz bulundu`,
+          description: '',
           dataClasses: []
         }));
-        console.log('✅ XposedOrNot breaches:', breaches);
       }
     } catch (err) {
-      console.log('❌ XposedOrNot error:', err.response?.status, err.message);
+      console.log('XposedOrNot error:', err.message);
     }
 
     // LeakIX taraması
