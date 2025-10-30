@@ -36,10 +36,10 @@ module.exports = async (req, res) => {
       if (xposedRes.data && xposedRes.data.breaches_details) {
         const breachNames = xposedRes.data.breaches_details.split(' ').filter(b => b);
         breaches = breachNames.map(name => ({
-          name: name,
+          name: name.charAt(0).toUpperCase() + name.slice(1), // İlk harf büyük
           source: 'XposedOrNot',
-          date: 'Bilinmiyor',
-          description: `${name} veri sızıntısında bulundu`,
+          date: 'Tarih Bilinmiyor',
+          description: '', // Açıklama kaldır
           dataClasses: []
         }));
       }
@@ -59,13 +59,47 @@ module.exports = async (req, res) => {
       );
       
       if (Array.isArray(leakixRes.data)) {
-        leakixLeaks = leakixRes.data.map(leak => ({
-          name: leak.event_source || 'LeakIX',
-          source: 'LeakIX',
-          date: leak.time || 'Bilinmiyor',
-          description: leak.summary || 'LeakIX veritabanında bulundu',
-          dataClasses: leak.leak_data || []
-        }));
+        leakixLeaks = leakixRes.data.map(leak => {
+          // Teknik isimleri temizle ve Türkçeleştir
+          let cleanName = leak.event_source || 'Bilinmeyen Kaynak';
+          
+          // IP/URL temizliği
+          if (cleanName.includes('http://') || cleanName.includes('https://')) {
+            cleanName = 'Web Servisi Sızıntısı';
+          } else if (cleanName.includes('Plugin') || cleanName.includes('Config')) {
+            cleanName = 'Sistem Yapılandırma Sızıntısı';
+          } else if (cleanName.includes('Git')) {
+            cleanName = 'Git Deposu Sızıntısı';
+          } else if (cleanName.includes('Database') || cleanName.includes('DB')) {
+            cleanName = 'Veritabanı Sızıntısı';
+          } else if (cleanName.includes('API')) {
+            cleanName = 'API Anahtarı Sızıntısı';
+          } else if (cleanName.length > 30) {
+            cleanName = 'Veri Sızıntısı';
+          }
+          
+          // Tarih formatı Türkçe
+          let formattedDate = 'Tarih Bilinmiyor';
+          if (leak.time) {
+            try {
+              formattedDate = new Date(leak.time).toLocaleDateString('tr-TR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              });
+            } catch (e) {
+              formattedDate = leak.time.split('T')[0];
+            }
+          }
+          
+          return {
+            name: cleanName,
+            source: 'LeakIX',
+            date: formattedDate,
+            description: '', // Açıklama kaldır
+            dataClasses: []
+          };
+        });
       }
     } catch (err) {
       console.log('LeakIX error:', err.message);
