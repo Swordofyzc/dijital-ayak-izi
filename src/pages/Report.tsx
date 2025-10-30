@@ -187,9 +187,14 @@ const Report = () => {
             className="bg-white rounded-3xl shadow-sm p-6 text-center hover:shadow-md transition-shadow"
           >
             <div className="text-xl font-bold text-[#0071E3] mb-2 truncate">
-              {(sources || []).join(', ')}
+              {(() => {
+                const uniqueSources = [...new Set((breaches || []).map((b: any) => b.source))].filter(s => 
+                  (breaches || []).filter((br: any) => br.source === s).length > 0
+                )
+                return uniqueSources.length > 0 ? `${uniqueSources.join(', ')}` : 'Henüz yok'
+              })()}
             </div>
-            <div className="text-gray-600 font-medium">Taranan Kaynaklar</div>
+            <div className="text-gray-600 font-medium">Sonuç Bulunan Kaynaklar</div>
           </motion.div>
 
           <motion.div
@@ -199,86 +204,95 @@ const Report = () => {
             className="bg-white rounded-3xl shadow-sm p-6 text-center hover:shadow-md transition-shadow"
           >
             <div className="text-5xl font-bold text-[#0071E3] mb-2">
-              {firstBreachYear && firstBreachYear !== 9999 ? firstBreachYear : 'N/A'}
+              {(() => {
+                const uniqueSources = [...new Set((breaches || []).map((b: any) => b.source))]
+                return uniqueSources.length
+              })()}
             </div>
-            <div className="text-gray-600 font-medium">İlk Sızıntı Yılı</div>
+            <div className="text-gray-600 font-medium">Kaynak Sayısı</div>
           </motion.div>
         </div>
 
-        {/* ŞİMDİ NE YAPMALI BÖLÜMÜ */}
+        {/* ŞİMDİ NE YAPMALI BÖLÜMÜ - APPLE STYLE */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 rounded-3xl p-8 mb-8 shadow-sm"
+          className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-8 mb-8 border border-blue-100"
         >
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+          <div className="flex items-center gap-3 mb-6">
             <span className="text-4xl">💡</span>
-            Şimdi Ne Yapmalıyım?
-          </h2>
+            <h2 className="text-2xl font-semibold text-gray-900">
+              Şimdi Ne Yapmalıyım?
+            </h2>
+          </div>
           
           <div className="space-y-4">
             {totalBreaches > 0 ? (
               <>
-                <div className="flex items-start gap-4 bg-white/70 rounded-2xl p-5 backdrop-blur-sm">
-                  <span className="text-2xl flex-shrink-0">1️⃣</span>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      Şifrelerinizi Derhal Değiştirin
-                    </h3>
-                    <p className="text-sm text-gray-700 leading-relaxed">
-                      Sızıntıda bulunan platformlardaki şifrenizi hemen değiştirin. 
-                      Aynı şifreyi başka yerlerde kullanıyorsanız onları da güncelleyin.
-                    </p>
+                <div className="bg-white rounded-2xl p-6 shadow-sm">
+                  <div className="flex items-start gap-4">
+                    <span className="text-2xl">🔐</span>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-2">
+                        1. Şifrelerinizi Derhal Değiştirin
+                      </h3>
+                      <p className="text-gray-600 text-sm">
+                        Sızıntıda bulunan platformlardaki şifrelerinizi hemen değiştirin. Aynı şifreyi başka yerlerde kullanıyorsanız onları da güncelleyin.
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 bg-white/70 rounded-2xl p-5 backdrop-blur-sm">
-                  <span className="text-2xl flex-shrink-0">2️⃣</span>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      İki Faktörlü Doğrulamayı Aktif Edin
-                    </h3>
-                    <p className="text-sm text-gray-700 leading-relaxed">
-                      Tüm önemli hesaplarınızda 2FA'yı (Google Authenticator, SMS) 
-                      mutlaka aktif edin. Bu ekstra güvenlik katmanı çok önemli.
-                    </p>
+                <div className="bg-white rounded-2xl p-6 shadow-sm">
+                  <div className="flex items-start gap-4">
+                    <span className="text-2xl">📱</span>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-2">
+                        2. İki Faktörlü Doğrulamayı Aktif Edin
+                      </h3>
+                      <p className="text-gray-600 text-sm">
+                        Tüm önemli hesaplarınızda 2FA'yı (Google Authenticator, SMS) mutlaka aktif edin.
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 bg-white/70 rounded-2xl p-5 backdrop-blur-sm">
-                  <span className="text-2xl flex-shrink-0">3️⃣</span>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      Güçlü ve Farklı Şifreler Kullanın
-                    </h3>
-                    <p className="text-sm text-gray-700 leading-relaxed">
-                      Her platform için farklı, en az 12 karakterli şifreler kullanın. 
-                      Şifre yöneticisi (Bitwarden, 1Password) kullanmayı düşünün.
-                    </p>
+                <div className="bg-white rounded-2xl p-6 shadow-sm">
+                  <div className="flex items-start gap-4">
+                    <span className="text-2xl">🔑</span>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-2">
+                        3. Güçlü ve Farklı Şifreler Kullanın
+                      </h3>
+                      <p className="text-gray-600 text-sm">
+                        Her platform için farklı, en az 12 karakterli şifreler kullanın. Şifre yöneticisi (Bitwarden, 1Password) kullanmayı düşünün.
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 bg-white/70 rounded-2xl p-5 backdrop-blur-sm">
-                  <span className="text-2xl flex-shrink-0">4️⃣</span>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      Hesap Aktivitelerinizi Takip Edin
-                    </h3>
-                    <p className="text-sm text-gray-700 leading-relaxed">
-                      Banka hesapları, e-posta ve sosyal medya hesaplarınızda 
-                      şüpheli aktivite olup olmadığını düzenli kontrol edin.
-                    </p>
+                <div className="bg-white rounded-2xl p-6 shadow-sm">
+                  <div className="flex items-start gap-4">
+                    <span className="text-2xl">👁️</span>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-2">
+                        4. Hesap Aktivitelerinizi Takip Edin
+                      </h3>
+                      <p className="text-gray-600 text-sm">
+                        Banka hesapları, e-posta ve sosyal medya hesaplarınızda şüpheli aktivite olup olmadığını düzenli kontrol edin.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </>
             ) : (
-              <div className="text-center py-8 bg-white/70 rounded-2xl backdrop-blur-sm">
+              <div className="text-center py-8 bg-white rounded-2xl">
                 <span className="text-6xl mb-4 block">🎉</span>
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
                   Harika! Hiçbir sızıntı bulunamadı
                 </h3>
-                <p className="text-sm text-gray-700 max-w-2xl mx-auto leading-relaxed">
+                <p className="text-sm text-gray-600 max-w-2xl mx-auto leading-relaxed">
                   E-posta adresiniz bilinen veri sızıntılarında bulunmuyor. 
                   Ancak yine de güvenlik önlemlerinizi sürdürmeyi unutmayın.
                 </p>
