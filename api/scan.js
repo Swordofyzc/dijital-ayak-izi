@@ -1,5 +1,7 @@
 const axios = require('axios');
 
+console.log('🚀 API scan.js yüklendi');
+
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -23,6 +25,7 @@ module.exports = async (req, res) => {
     const leakixKey = process.env.LEAKIX_API_KEY;
 
     // XposedOrNot taraması
+    console.log('=== XPOSEDORNOT BAŞLIYOR ===');
     let breaches = [];
     try {
       const xposedRes = await axios.get(
@@ -40,10 +43,18 @@ module.exports = async (req, res) => {
         }));
       }
     } catch (err) {
-      console.log('XposedOrNot error:', err.message);
+      console.log('=== XPOSEDORNOT CATCH BLOĞU ===');
+      console.log('❌ Error type:', err.constructor.name);
+      console.log('❌ Error message:', err.message);
+      console.log('❌ Error stack:', err.stack);
+      if (err.response) {
+        console.log('❌ Response status:', err.response.status);
+        console.log('❌ Response data:', err.response.data);
+      }
     }
 
     // LeakIX taraması
+    console.log('=== LEAKİX BAŞLIYOR ===');
     let leakixLeaks = [];
     try {
       const leakixRes = await axios.get(
