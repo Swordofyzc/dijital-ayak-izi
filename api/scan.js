@@ -25,6 +25,7 @@ module.exports = async (req, res) => {
     // XposedOrNot taraması
     let breaches = [];
     try {
+      console.log('🔍 XposedOrNot isteği gönderiliyor...');
       const xposedRes = await axios.get(
         `https://passwords.xposedornot.com/v1/breachedaccount/${email}`,
         { 
@@ -36,18 +37,21 @@ module.exports = async (req, res) => {
         }
       );
       
+      console.log('✅ XposedOrNot response:', xposedRes.data);
+      
       if (xposedRes.data && xposedRes.data.breaches_details) {
         const breachNames = xposedRes.data.breaches_details.split(' ').filter(b => b);
         breaches = breachNames.map(name => ({
-          name: name.charAt(0).toUpperCase() + name.slice(1), // İlk harf büyük
+          name: name.charAt(0).toUpperCase() + name.slice(1),
           source: 'XposedOrNot',
           date: 'Tarih Bilinmiyor',
-          description: '', // Açıklama kaldır
+          description: `${name} veri ihlalinde e-posta adresiniz bulundu`,
           dataClasses: []
         }));
+        console.log('✅ XposedOrNot breaches:', breaches);
       }
     } catch (err) {
-      console.log('XposedOrNot error:', err.message);
+      console.log('❌ XposedOrNot error:', err.response?.status, err.message);
     }
 
     // LeakIX taraması
@@ -62,26 +66,29 @@ module.exports = async (req, res) => {
       );
       
       if (Array.isArray(leakixRes.data)) {
-        leakixLeaks = leakixRes.data.map(leak => {
-          // Teknik isimleri temizle ve Türkçeleştir
-          let cleanName = leak.event_source || 'Bilinmeyen Kaynak';
+        leakixLeaks = leakixRes.data.map((leak, index) => {
+          // ORİJİNAL ismini koru ama temizle
+          let cleanName = leak.event_source || `Veri Sızıntısı #${index + 1}`;
           
-          // IP/URL temizliği
-          if (cleanName.includes('http://') || cleanName.includes('https://')) {
-            cleanName = 'Web Servisi Sızıntısı';
-          } else if (cleanName.includes('Plugin') || cleanName.includes('Config')) {
-            cleanName = 'Sistem Yapılandırma Sızıntısı';
-          } else if (cleanName.includes('Git')) {
-            cleanName = 'Git Deposu Sızıntısı';
-          } else if (cleanName.includes('Database') || cleanName.includes('DB')) {
-            cleanName = 'Veritabanı Sızıntısı';
-          } else if (cleanName.includes('API')) {
-            cleanName = 'API Anahtarı Sızıntısı';
-          } else if (cleanName.length > 30) {
-            cleanName = 'Veri Sızıntısı';
+          // Sadece gerçekten çok uzun/teknik olanları temizle
+          if (cleanName.length > 50) {
+            // URL varsa domain'i al
+            if (cleanName.includes('http')) {
+              try {
+                const url = new URL(cleanName);
+                cleanName = `${url.hostname} - Sızıntı`;
+              } catch {
+                cleanName = 'Web Servisi Sızıntısı';
+              }
+            }
           }
           
-          // Tarih formatı Türkçe
+          // IP adresi ise temizle
+          if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.test(cleanName)) {
+            cleanName = `IP Tabanlı Sızıntı (${cleanName.split(':')[0]})`;
+          }
+          
+          // Tarih
           let formattedDate = 'Tarih Bilinmiyor';
           if (leak.time) {
             try {
@@ -95,12 +102,19 @@ module.exports = async (req, res) => {
             }
           }
           
+          // Açıklama - leak.summary varsa ilk 150 karakterini al
+          let description = '';
+          if (leak.summary && leak.summary.length > 0) {
+            description = leak.summary.substring(0, 150);
+            if (leak.summary.length > 150) description += '...';
+          }
+          
           return {
             name: cleanName,
             source: 'LeakIX',
             date: formattedDate,
-            description: '', // Açıklama kaldır
-            dataClasses: []
+            description: description,
+            dataClasses: leak.leak_data || []
           };
         });
       }
