@@ -35,8 +35,8 @@ const Report = () => {
       console.log('📊 Total Breaches:', scanResult.totalBreaches)
       console.log('📊 Sources:', scanResult.sources)
       if (scanResult.breaches) {
-        console.log('🔴 XposedOrNot breaches:', scanResult.breaches?.filter((b: any) => b.source === 'XposedOrNot'))
-        console.log('🟣 LeakIX breaches:', scanResult.breaches?.filter((b: any) => b.source === 'LeakIX'))
+        console.log('🔴 XposedOrNot breaches:', (scanResult.breaches || []).filter((b: any) => b.source === 'XposedOrNot'))
+        console.log('🟣 LeakIX breaches:', (scanResult.breaches || []).filter((b: any) => b.source === 'LeakIX'))
       }
     }
   }, [scanResult, navigate])
@@ -57,11 +57,11 @@ const Report = () => {
   // Veriyi hazırla
   const {  email, breaches, profile, totalBreaches, riskScore, sources } = scanResult
   const scoreData = getScoreData(riskScore)
-  const displayedBreaches = showAll ? breaches : breaches?.slice(0, 10)
+  const displayedBreaches = showAll ? breaches : (breaches || []).slice(0, 10)
 
   // İlk sızıntı yılını bul
-  const firstBreachYear = breaches?.length > 0
-    ? breaches?.reduce((min: number, breach: any) => {
+  const firstBreachYear = (breaches || []).length > 0
+    ? (breaches || []).reduce((min: number, breach: any) => {
         if (!breach.date) return min
         const year = parseInt(breach.date.split('-')[0])
         return year < min ? year : min
@@ -187,7 +187,7 @@ const Report = () => {
             className="bg-white rounded-3xl shadow-sm p-6 text-center hover:shadow-md transition-shadow"
           >
             <div className="text-xl font-bold text-[#0071E3] mb-2 truncate">
-              {sources.join(', ')}
+              {(sources || []).join(', ')}
             </div>
             <div className="text-gray-600 font-medium">Taranan Kaynaklar</div>
           </motion.div>
@@ -315,7 +315,7 @@ const Report = () => {
             </h2>
             
             <div className="space-y-3">
-              {displayedBreaches?.map((breach: any, index: number) => {
+              {(displayedBreaches || []).map((breach: any, index: number) => {
                 // Kaynak bazlı renk ve icon - APPLE STYLE
                 const getSourceConfig = () => {
                   if (breach.source === 'XposedOrNot') return { 
@@ -430,7 +430,7 @@ const Report = () => {
                           📊 Sızan Veriler:
                         </span>
                         <div className="flex flex-wrap gap-2">
-                          {breach.dataClasses.map((dataClass: string, i: number) => (
+                          {(breach.dataClasses || []).map((dataClass: string, i: number) => (
                             <span 
                               key={i}
                               className="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-200"
@@ -512,7 +512,7 @@ const Report = () => {
                   <div className="mt-4">
                     <p className="text-sm text-gray-600 mb-2">Bağlı hesaplar:</p>
                     <div className="flex flex-wrap gap-2">
-                      {profile?.accounts?.map((account: any, idx: number) => (
+                      {(profile?.accounts || []).map((account: any, idx: number) => (
                         <a
                           key={idx}
                           href={account.url}
@@ -543,7 +543,7 @@ const Report = () => {
           </h2>
           
           <div className="space-y-3">
-            {recommendations.map((rec, index) => (
+            {(recommendations || []).map((rec, index) => (
               <div key={index} className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
                 <button
                   onClick={() => setOpenAccordion(openAccordion === index ? null : index)}
