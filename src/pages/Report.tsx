@@ -45,18 +45,65 @@ const Report = () => {
     return null
   }
 
-  // Skor hesaplama fonksiyonu
-  const getScoreData = (score: number) => {
-    if (score >= 90) return { risk: 'Mükemmel', emoji: '✅', color: 'from-green-500 to-emerald-500', message: 'E-postanız hiçbir veri sızıntısında bulunmamış!' }
-    if (score >= 70) return { risk: 'İyi', emoji: '🟢', color: 'from-blue-500 to-cyan-500', message: 'Az sayıda sızıntı tespit edildi. Şifrelerinizi güncelleyin.' }
-    if (score >= 50) return { risk: 'Orta', emoji: '🟡', color: 'from-yellow-500 to-amber-500', message: 'Orta düzeyde risk var. Hemen önlem alın!' }
-    if (score >= 30) return { risk: 'Kötü', emoji: '🟠', color: 'from-orange-500 to-red-500', message: 'Yüksek risk! Tüm şifrelerinizi değiştirin.' }
-    return { risk: 'Çok Kötü', emoji: '🔴', color: 'from-red-600 to-red-800', message: 'Çok yüksek risk! Acil önlem gerekiyor!' }
+  // Risk skoru hesapla (iyileştirilmiş)
+  const calculateRiskScore = () => {
+    const breachCount = scanResult.breaches?.length || 0
+    
+    if (breachCount === 0) return 0
+    if (breachCount <= 2) return 25  // Düşük risk
+    if (breachCount <= 5) return 50  // Orta risk
+    if (breachCount <= 10) return 75 // Yüksek risk
+    return 100 // Kritik risk
+  }
+
+  // Risk seviyesi bilgisi
+  const getRiskLevel = (score: number) => {
+    if (score === 0) return { 
+      risk: 'Güvenli', 
+      emoji: '✅', 
+      color: 'from-green-500 to-emerald-500', 
+      textColor: 'text-green-600',
+      bg: 'bg-green-50',
+      message: 'E-postanız hiçbir veri sızıntısında bulunmamış!' 
+    }
+    if (score <= 25) return { 
+      risk: 'Düşük Risk', 
+      emoji: '🟢', 
+      color: 'from-yellow-500 to-amber-500', 
+      textColor: 'text-yellow-600',
+      bg: 'bg-yellow-50',
+      message: 'Az sayıda sızıntı tespit edildi. Şifrelerinizi güncelleyin.' 
+    }
+    if (score <= 50) return { 
+      risk: 'Orta Risk', 
+      emoji: '🟡', 
+      color: 'from-orange-500 to-amber-500', 
+      textColor: 'text-orange-600',
+      bg: 'bg-orange-50',
+      message: 'Orta düzeyde risk var. Hemen önlem alın!' 
+    }
+    if (score <= 75) return { 
+      risk: 'Yüksek Risk', 
+      emoji: '🔴', 
+      color: 'from-red-500 to-red-600', 
+      textColor: 'text-red-600',
+      bg: 'bg-red-50',
+      message: 'Yüksek risk! Tüm şifrelerinizi değiştirin.' 
+    }
+    return { 
+      risk: 'Kritik Risk', 
+      emoji: '❌', 
+      color: 'from-red-600 to-red-800', 
+      textColor: 'text-red-800',
+      bg: 'bg-red-100',
+      message: 'Kritik seviye! Acil önlem gerekiyor!' 
+    }
   }
 
   // Veriyi hazırla
-  const {  email, breaches, profile, totalBreaches, riskScore } = scanResult
-  const scoreData = getScoreData(riskScore)
+  const {  email, breaches, profile, totalBreaches } = scanResult
+  const riskScore = calculateRiskScore()
+  const scoreData = getRiskLevel(riskScore)
   const displayedBreaches = showAll ? breaches : (breaches || []).slice(0, 10)
 
   // Öneriler
@@ -407,7 +454,20 @@ const Report = () => {
                         {/* Breach Info */}
                         <div>
                           <h3 className="text-xl font-bold text-gray-900 mb-1">
-                            {breach.name}
+                            {(() => {
+                              // Teknik isimleri temizle
+                              let name = breach.name
+                              if (name.includes('Plugin') || name.includes('Http') || name.includes('Config')) {
+                                return 'Sistem Sızıntısı'
+                              }
+                              if (name.includes('Database') || name.includes('DB')) {
+                                return 'Veritabanı Sızıntısı'
+                              }
+                              if (name.includes('API')) {
+                                return 'API Sızıntısı'
+                              }
+                              return name
+                            })()}
                           </h3>
                           <p className="text-sm text-gray-500">
                             {formatDate(breach.breachDate || breach.date)}
@@ -415,13 +475,13 @@ const Report = () => {
                         </div>
                       </div>
 
-                      {/* Source Badge */}
+                      {/* Kaynak Badge (Türkçe) */}
                       <span className={`px-4 py-2 rounded-xl text-sm font-semibold ${sourceConfig.badge}`}>
-                        {breach.source}
+                        {breach.source === 'XposedOrNot' ? 'XposedOrNot' : breach.source === 'LeakIX' ? 'LeakIX' : breach.source}
                       </span>
                     </div>
 
-                    {/* Description / Detay Bilgisi */}
+                    {/* Açıklama / Detay Bilgisi */}
                     <div className="mb-4">
                       {breach.description ? (
                         <p className="text-sm text-gray-700 leading-relaxed">
@@ -430,7 +490,7 @@ const Report = () => {
                       ) : (
                         <div className="text-sm text-gray-700 space-y-2">
                           <p className="leading-relaxed">
-                            Bu e-posta adresi <strong>{breach.name}</strong> veri sızıntısında tespit edildi.
+                            Bu e-posta adresi veri sızıntısında tespit edildi.
                           </p>
                           <div className="flex flex-col gap-1 text-xs text-gray-600 bg-gray-50 rounded-lg p-3 border border-gray-200">
                             <div className="flex items-center gap-2">
