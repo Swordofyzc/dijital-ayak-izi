@@ -124,45 +124,63 @@ const Report = () => {
     }
   ]
 
-  const shareOnLinkedIn = () => {
-    const url = window.location.href
-    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank')
-  }
 
   return (
     <div 
-      className="min-h-screen bg-[#F5F5F7] py-12 px-6"
+      className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 relative overflow-hidden py-12 px-6"
       style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, sans-serif' }}
     >
-      <div className="max-w-5xl mx-auto">
-        {/* BÖLÜM 1: BAŞLIK */}
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0" 
+             style={{
+               backgroundImage: `radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.3) 1px, transparent 0)`,
+               backgroundSize: '40px 40px'
+             }}
+        />
+      </div>
+
+      {/* Gradient Orbs */}
+      <motion.div
+        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full blur-3xl"
+      />
+
+      <div className="max-w-5xl mx-auto relative z-10">
+        {/* BAŞLIK */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
-            Dijital Ayak İzi Raporu
+          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-2xl shadow-blue-500/40">
+            <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Güvenlik Raporu
           </h1>
-          <p className="text-xl text-gray-600">
-            <span className="font-semibold">{email}</span> için sonuçlar
+          <p className="text-lg text-gray-300">
+            <span className="text-blue-400 font-semibold">{email}</span> için sonuçlar
           </p>
         </motion.div>
 
-        {/* BÖLÜM 2: SKOR KARTI */}
+        {/* SKOR KARTI - DARK THEME */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-white rounded-3xl shadow-lg p-8 md:p-12 mb-8 relative overflow-hidden"
+          className="bg-slate-800/60 backdrop-blur-xl rounded-3xl border border-slate-700/50 shadow-2xl p-8 md:p-12 mb-8 relative overflow-hidden"
         >
-          {/* Gradient border effect */}
-          <div className={`absolute inset-0 bg-gradient-to-r ${scoreData.color} opacity-10`} />
+          {/* Gradient glow */}
+          <div className={`absolute inset-0 bg-gradient-to-r ${scoreData.color} opacity-10 blur-3xl`} />
           
           <div className="relative">
-            <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">
-              DİJİTAL AYAK İZİ SKORU
+            <h2 className="text-2xl font-bold text-white text-center mb-8 uppercase tracking-wider">
+              GÜVENLİK SKORU
             </h2>
             
             <motion.div
@@ -171,59 +189,59 @@ const Report = () => {
               transition={{ delay: 0.4, type: 'spring', stiffness: 200 }}
               className="text-center mb-6"
             >
-              <div className="text-7xl md:text-8xl font-bold mb-4">
+              <div className="text-7xl md:text-9xl font-bold mb-4">
                 <span className={`bg-gradient-to-r ${scoreData.color} bg-clip-text text-transparent`}>
                   {riskScore}
                 </span>
-                <span className="text-gray-400 text-5xl">/100</span>
+                <span className="text-gray-500 text-5xl">/100</span>
               </div>
             </motion.div>
 
             {/* Progress Bar */}
             <div className="mb-8 max-w-md mx-auto">
-              <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-3 bg-slate-700/30 rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${riskScore}%` }}
                   transition={{ duration: 1, delay: 0.6, ease: 'easeOut' }}
-                  className={`h-full bg-gradient-to-r ${scoreData.color}`}
+                  className={`h-full bg-gradient-to-r ${scoreData.color} shadow-lg`}
                 />
               </div>
             </div>
 
-            <div className="text-center space-y-2">
-              <div className="flex items-center justify-center space-x-2">
-                <span className="text-3xl">{scoreData.emoji}</span>
-                <span className="text-2xl font-semibold text-gray-900">
-                  Risk Seviyesi: {scoreData.risk}
+            <div className="text-center space-y-3">
+              <div className="flex items-center justify-center space-x-3">
+                <span className="text-4xl">{scoreData.emoji}</span>
+                <span className="text-3xl font-bold text-white">
+                  {scoreData.risk}
                 </span>
               </div>
-              <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+              <p className="text-gray-300 text-lg max-w-2xl mx-auto leading-relaxed">
                 {scoreData.message}
               </p>
             </div>
           </div>
         </motion.div>
 
-        {/* BÖLÜM 3: İSTATİSTİKLER */}
+        {/* İSTATİSTİKLER - DARK THEME */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white rounded-3xl shadow-sm p-6 text-center hover:shadow-md transition-shadow"
+            className="bg-slate-800/40 backdrop-blur-xl rounded-3xl border border-slate-700/50 p-6 text-center hover:border-blue-500/50 transition-all duration-300 shadow-xl"
           >
-            <div className="text-5xl font-bold text-[#0071E3] mb-2">{totalBreaches}</div>
-            <div className="text-gray-600 font-medium">Toplam Veri Sızıntısı</div>
+            <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mb-2">{totalBreaches}</div>
+            <div className="text-gray-300 font-medium">Toplam Veri Sızıntısı</div>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white rounded-3xl shadow-sm p-6 text-center hover:shadow-md transition-shadow"
+            className="bg-slate-800/40 backdrop-blur-xl rounded-3xl border border-slate-700/50 p-6 text-center hover:border-purple-500/50 transition-all duration-300 shadow-xl"
           >
-            <div className="text-xl font-bold text-[#0071E3] mb-2 truncate">
+            <div className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2 truncate">
               {(() => {
                 const uniqueSources = [...new Set((breaches || []).map((b: any) => b.source))].filter(s => 
                   (breaches || []).filter((br: any) => br.source === s).length > 0
@@ -231,22 +249,22 @@ const Report = () => {
                 return uniqueSources.length > 0 ? `${uniqueSources.join(', ')}` : 'Henüz yok'
               })()}
             </div>
-            <div className="text-gray-600 font-medium">Sonuç Bulunan Kaynaklar</div>
+            <div className="text-gray-300 font-medium">Sonuç Bulunan Kaynaklar</div>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="bg-white rounded-3xl shadow-sm p-6 text-center hover:shadow-md transition-shadow"
+            className="bg-slate-800/40 backdrop-blur-xl rounded-3xl border border-slate-700/50 p-6 text-center hover:border-green-500/50 transition-all duration-300 shadow-xl"
           >
-            <div className="text-5xl font-bold text-[#0071E3] mb-2">
+            <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400 mb-2">
               {(() => {
                 const uniqueSources = [...new Set((breaches || []).map((b: any) => b.source))]
                 return uniqueSources.length
               })()}
             </div>
-            <div className="text-gray-600 font-medium">Kaynak Sayısı</div>
+            <div className="text-gray-300 font-medium">Kaynak Sayısı</div>
           </motion.div>
         </div>
 
@@ -668,79 +686,78 @@ const Report = () => {
         </motion.div>
 
         {/* BÖLÜM 6: PAYLAŞ */}
+        {/* YENİ TARAMA BUTONU */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9 }}
-          className="flex flex-col sm:flex-row gap-4"
+          className="flex justify-center"
         >
           <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={shareOnLinkedIn}
-            className="flex-1 py-4 px-6 bg-[#0077B5] text-white font-semibold rounded-full 
-                     shadow-lg hover:shadow-xl transition-all flex items-center justify-center space-x-2"
-          >
-            <span className="text-xl">🔗</span>
-            <span>Raporu Paylaş</span>
-          </motion.button>
-
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(59, 130, 246, 0.4)' }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => navigate('/')}
-            className="flex-1 py-4 px-6 bg-gradient-to-r from-[#0071E3] to-[#00A8E8] 
-                     text-white font-semibold rounded-full shadow-lg hover:shadow-xl 
-                     transition-all flex items-center justify-center space-x-2"
+            className="py-5 px-12 bg-gradient-to-r from-blue-500 to-cyan-500 
+                     text-white font-bold rounded-2xl shadow-2xl 
+                     transition-all flex items-center justify-center space-x-3 text-lg"
           >
-            <span className="text-xl">🏠</span>
-            <span>Ana Sayfaya Dön</span>
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <span>Yeni Tarama Yap</span>
           </motion.button>
         </motion.div>
 
-        {/* FOOTER - ÇALIŞIR BUTONLAR */}
+        {/* FOOTER - DARK THEME */}
         <motion.footer
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
-          className="mt-24 pt-12 border-t border-gray-200 bg-white"
+          className="mt-32 pt-16 border-t border-slate-700/50 bg-slate-900/50 backdrop-blur-xl"
         >
           <div className="text-center">
-            <h3 className="font-semibold text-gray-900 mb-2">
-              Dijital Ayak İzi Tarayıcı
-            </h3>
-            <p className="text-sm text-gray-600 mb-6">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-white">
+                Dijital Ayak İzi
+              </h3>
+            </div>
+            <p className="text-sm text-gray-400 max-w-md mx-auto mb-6">
               E-posta adresiniz yalnızca tarama için kullanılır ve saklanmaz. 
               Tüm işlemler anlık olarak yapılır.
             </p>
             
-            {/* Linkler - MODAL */}
-            <div className="flex items-center justify-center gap-6 text-sm">
+            {/* Links */}
+            <div className="flex items-center justify-center gap-6 text-sm flex-wrap">
               <button 
                 onClick={() => setPrivacyModalOpen(true)}
-                className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer font-medium"
+                className="text-gray-400 hover:text-blue-400 transition-colors cursor-pointer font-medium"
               >
                 Gizlilik Politikası
               </button>
               
-              <span className="text-gray-300">•</span>
+              <span className="text-slate-700">•</span>
               
               <button 
                 onClick={() => setAboutModalOpen(true)}
-                className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer font-medium"
+                className="text-gray-400 hover:text-blue-400 transition-colors cursor-pointer font-medium"
               >
                 Hakkında
               </button>
               
-              <span className="text-gray-300">•</span>
+              <span className="text-slate-700">•</span>
               
               <a 
                 href="https://github.com/swordofyzc/dijital-ayak-izi" 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-600 hover:text-blue-600 transition-colors font-medium flex items-center gap-1"
+                className="text-gray-400 hover:text-blue-400 transition-colors font-medium flex items-center gap-2"
               >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
                 </svg>
                 GitHub
@@ -748,7 +765,7 @@ const Report = () => {
             </div>
             
             {/* Copyright */}
-            <p className="text-xs text-gray-400 mt-8">
+            <p className="text-xs text-gray-500 mt-8">
               © 2025 Dijital Ayak İzi. Tüm hakları saklıdır.
             </p>
           </div>
@@ -866,4 +883,5 @@ const Report = () => {
 }
 
 export default Report
+
 

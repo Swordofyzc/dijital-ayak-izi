@@ -116,53 +116,45 @@ const Scan = () => {
     scanEmail()
   }, [email, navigate])
 
-  // Hata durumu - Apple Style
+  // Hata durumu - Dark Theme
   if (error) {
     return (
-      <div className="min-h-screen bg-[#F5F5F7] flex items-center justify-center px-6"
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center px-6"
            style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, sans-serif' }}>
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="bg-white rounded-3xl shadow-xl p-12 max-w-md w-full text-center border border-gray-100"
-          style={{
-            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.12)'
-          }}
+          className="bg-slate-800/60 backdrop-blur-xl rounded-3xl shadow-2xl p-12 max-w-md w-full text-center border border-slate-700/50"
         >
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
             className="inline-flex items-center justify-center w-20 h-20 mb-6
-                     bg-gradient-to-br from-red-500 to-rose-600 rounded-2xl"
-            style={{
-              boxShadow: '0 10px 40px rgba(239, 68, 68, 0.3)'
-            }}
+                     bg-gradient-to-br from-red-500 to-rose-600 rounded-2xl
+                     shadow-2xl shadow-red-500/40"
           >
             <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </motion.div>
           
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+          <h2 className="text-2xl font-bold text-white mb-4">
             Bir Sorun Oluştu
           </h2>
           
-          <p className="text-gray-600 mb-8 leading-relaxed">
+          <p className="text-gray-300 mb-8 leading-relaxed">
             {error}
           </p>
           
           <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(59, 130, 246, 0.4)' }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => navigate('/')}
-            className="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-blue-600 
-                     text-white font-semibold rounded-2xl
-                     hover:shadow-lg transition-all duration-200"
-            style={{
-              boxShadow: '0 4px 20px rgba(59, 130, 246, 0.3)'
-            }}
+            className="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-cyan-500 
+                     text-white font-bold rounded-2xl
+                     shadow-xl transition-all duration-200"
           >
             Ana Sayfaya Dön
           </motion.button>
@@ -171,63 +163,61 @@ const Scan = () => {
     )
   }
 
-  // Loading ekranı - Apple Premium + Siber Güvenlik Karma Tema
+  // Loading ekranı - Dark Apple + Siber Güvenlik Tema
   return (
     <div 
-      className="min-h-screen bg-[#F5F5F7] relative overflow-hidden flex items-center justify-center px-6 py-12"
+      className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 relative overflow-hidden flex items-center justify-center px-6 py-12"
       style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, sans-serif' }}
     >
-      {/* Subtle Background Pattern - Apple Style */}
-      <div className="absolute inset-0 opacity-[0.03]">
+      {/* Animated Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0" 
              style={{
-               backgroundImage: `radial-gradient(circle at 2px 2px, rgba(0, 113, 227, 0.15) 1px, transparent 0)`,
+               backgroundImage: `radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.3) 1px, transparent 0)`,
                backgroundSize: '40px 40px'
              }}
         />
       </div>
 
-      {/* Soft Gradient Orbs - Apple Style Blurred */}
+      {/* Gradient Orbs */}
       <motion.div
         animate={{ 
-          scale: [1, 1.1, 1],
-          opacity: [0.1, 0.15, 0.1]
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.5, 0.3]
         }}
         transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-blue-400 to-cyan-300 rounded-full blur-[100px]"
+        className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500 rounded-full blur-3xl"
       />
       <motion.div
         animate={{ 
           scale: [1.1, 1, 1.1],
-          opacity: [0.08, 0.12, 0.08]
+          opacity: [0.2, 0.4, 0.2]
         }}
         transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-indigo-300 to-blue-400 rounded-full blur-[100px]"
+        className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500 rounded-full blur-3xl"
       />
 
       <div className="max-w-5xl w-full relative z-10">
-        {/* Email Header - Apple Style with Security Badge */}
+        {/* Email Header - Dark Theme */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          {/* Shield Icon - Subtle Glow */}
+          {/* Shield Icon */}
           <motion.div 
             animate={{ 
-              scale: [1, 1.03, 1],
+              scale: [1, 1.05, 1],
             }}
             transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
             className="inline-flex items-center justify-center w-20 h-20 mb-6
                      bg-gradient-to-br from-blue-500 to-blue-600 
-                     rounded-2xl shadow-xl"
-            style={{
-              boxShadow: '0 10px 40px rgba(0, 113, 227, 0.3)'
-            }}
+                     rounded-2xl shadow-2xl shadow-blue-500/40"
           >
-            <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v3a1 1 0 102 0V7z" clipRule="evenodd" />
+            <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </motion.div>
 
@@ -236,41 +226,41 @@ const Scan = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <p className="text-sm text-gray-500 mb-3">
+            <p className="text-sm text-gray-400 mb-3 uppercase tracking-wider font-semibold">
               Güvenlik Taraması
             </p>
-            <p className="text-2xl font-semibold text-gray-900 mb-2 break-all">
+            <p className="text-2xl font-bold text-white mb-4 break-all">
               {email}
             </p>
-            <div className="inline-flex items-center gap-2 text-sm text-gray-600">
-              <span className="flex items-center gap-1">
-                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+            <div className="inline-flex items-center gap-3 text-sm">
+              <span className="flex items-center gap-2 text-green-400">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                Güvenli Bağlantı
+                Şifreli Bağlantı
               </span>
-              <span className="text-gray-400">•</span>
-              <span>500+ Veritabanı</span>
+              <span className="text-slate-600">•</span>
+              <span className="text-gray-300">500+ Veritabanı</span>
             </div>
           </motion.div>
         </motion.div>
 
-        {/* Premium Scanning Animation - Apple + Security */}
+        {/* Scanning Animation - Dark Theme */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
           className="flex flex-col items-center justify-center mb-12"
         >
-          {/* Central Spinner with Glow */}
-          <div className="relative w-40 h-40 mb-8">
-            {/* Subtle Pulse Rings */}
+          {/* Central Spinner */}
+          <div className="relative w-48 h-48 mb-8">
+            {/* Pulse Rings */}
             {[0, 1, 2].map((i) => (
               <motion.div
                 key={i}
                 animate={{ 
-                  scale: [1, 1.4],
-                  opacity: [0.4, 0]
+                  scale: [1, 1.5],
+                  opacity: [0.5, 0]
                 }}
                 transition={{ 
                   duration: 2.5,
@@ -278,26 +268,23 @@ const Scan = () => {
                   delay: i * 0.8,
                   ease: 'easeOut'
                 }}
-                className="absolute inset-0 border-2 border-blue-400 rounded-full"
+                className="absolute inset-0 border-2 border-blue-500 rounded-full"
               />
             ))}
 
-            {/* Main Spinner */}
-            <div className="absolute inset-6 bg-white rounded-full 
+            {/* Main Spinner Card */}
+            <div className="absolute inset-8 bg-slate-800/60 backdrop-blur-xl rounded-full 
                           flex items-center justify-center
-                          shadow-2xl"
-                 style={{
-                   boxShadow: '0 20px 60px rgba(0, 113, 227, 0.25)'
-                 }}>
+                          border border-slate-700/50 shadow-2xl shadow-blue-500/20">
               
-              {/* Rotating Border */}
+              {/* Rotating Border Gradient */}
               <motion.div
                 animate={{ rotate: 360 }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
                 className="absolute inset-0 rounded-full"
                 style={{
-                  background: 'conic-gradient(from 0deg, transparent 0%, rgba(0, 113, 227, 0.6) 50%, transparent 100%)',
-                  padding: '3px',
+                  background: 'conic-gradient(from 0deg, transparent 0%, rgba(59, 130, 246, 0.8) 50%, transparent 100%)',
+                  padding: '2px',
                   WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                   WebkitMaskComposite: 'xor',
                   maskComposite: 'exclude'
@@ -307,53 +294,58 @@ const Scan = () => {
               {/* Center Icon */}
               <motion.div
                 animate={{ 
-                  scale: [1, 1.05, 1],
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 5, 0, -5, 0]
                 }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                 className="relative z-10"
               >
-                <svg className="w-14 h-14 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-16 h-16 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.954 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </motion.div>
 
-              {/* Scanning Indicators */}
-              {[0, 1, 2].map((i) => (
+              {/* Scanning Dots */}
+              {[0, 1, 2, 3].map((i) => (
                 <motion.div
                   key={i}
                   animate={{ 
-                    scale: [0, 1.2, 0],
-                    opacity: [0, 0.6, 0]
+                    scale: [0, 1.5, 0],
+                    opacity: [0, 0.8, 0]
                   }}
                   transition={{
                     duration: 2,
                     repeat: Infinity,
-                    delay: i * 0.6
+                    delay: i * 0.5
                   }}
-                  className="absolute w-3 h-3 bg-blue-500 rounded-full"
+                  className="absolute w-2 h-2 bg-blue-400 rounded-full"
                   style={{
-                    top: `${30 + i * 15}%`,
-                    right: `${25 + i * 10}%`
+                    top: `${20 + i * 15}%`,
+                    right: `${20 + (i % 2) * 40}%`
                   }}
                 />
               ))}
             </div>
           </div>
 
-          {/* Status Text - Apple Style */}
+          {/* Status Text */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
             className="text-center"
           >
-            <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-3xl font-bold text-white mb-3">
               Dijital Ayak İziniz Taranıyor
             </h3>
-            <p className="text-gray-600">
+            <motion.p 
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="text-lg text-gray-300"
+            >
               500+ veritabanında güvenlik kontrolü yapılıyor
-            </p>
+            </motion.p>
             
             {/* Progress Indicator */}
             <motion.div 
@@ -381,19 +373,16 @@ const Scan = () => {
           </motion.div>
         </motion.div>
 
-        {/* Progress Cards - Apple Premium Style */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Progress Cards - Dark Theme */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {progress.map((item, index) => (
             <motion.div 
               key={index}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 + index * 0.1, duration: 0.5 }}
-              className="bg-white rounded-3xl p-6 shadow-xl border border-gray-100
-                       hover:shadow-2xl transition-all duration-300"
-              style={{
-                boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)'
-              }}
+              className="bg-slate-800/40 backdrop-blur-xl rounded-3xl p-6 border border-slate-700/50
+                       hover:border-blue-500/50 transition-all duration-300 shadow-xl"
             >
               <div className="flex items-center gap-4 mb-4">
                 {/* Status Icon - Apple Style */}
@@ -446,15 +435,15 @@ const Scan = () => {
                 )}
                 
                 <div className="flex-1">
-                  <h4 className="font-semibold text-gray-900 text-lg">{item.service}</h4>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <h4 className="font-semibold text-white text-lg">{item.service}</h4>
+                  <p className="text-xs text-gray-400 mt-0.5">
                     {item.status === 'scanning' ? 'Taranıyor...' : 
                      item.status === 'completed' ? 'Tamamlandı' : 'Başarısız'}
                   </p>
                 </div>
               </div>
 
-              <p className="text-sm text-gray-600 mb-3 leading-relaxed">
+              <p className="text-sm text-gray-300 mb-3 leading-relaxed">
                 {item.message || (item.status === 'scanning' ? 'İşleniyor...' : 'Bitti')}
               </p>
 
@@ -463,23 +452,23 @@ const Scan = () => {
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ type: 'spring', stiffness: 200 }}
-                  className="flex items-baseline gap-2 pt-3 border-t border-gray-100"
+                  className="flex items-baseline gap-2 pt-3 border-t border-slate-700/50"
                 >
                   <span className="text-3xl font-bold text-transparent bg-clip-text 
-                                 bg-gradient-to-r from-blue-600 to-blue-400">
+                                 bg-gradient-to-r from-blue-400 to-cyan-400">
                     {item.count}
                   </span>
-                  <span className="text-sm text-gray-500">sonuç bulundu</span>
+                  <span className="text-sm text-gray-400">sonuç bulundu</span>
                 </motion.div>
               )}
 
               {/* Scanning Progress Bar */}
               {item.status === 'scanning' && (
-                <div className="mt-4 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div className="mt-4 h-2 bg-slate-700/30 rounded-full overflow-hidden">
                   <motion.div
                     animate={{ x: ['-100%', '100%'] }}
                     transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-                    className="h-full w-1/2 bg-gradient-to-r from-blue-500 to-blue-400 rounded-full"
+                    className="h-full w-1/2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full"
                   />
                 </div>
               )}

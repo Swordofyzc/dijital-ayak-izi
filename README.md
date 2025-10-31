@@ -13,7 +13,7 @@ E-posta adresinizin bilinen veri sızıntılarında olup olmadığını kontrol 
 - 🚀 **Hızlı Tarama**: 3 farklı kaynaktan saniyeler içinde kapsamlı analiz
 - 🔒 **100% Güvenli**: Verileriniz kaydedilmez, sadece anlık tarama yapılır
 - 📊 **Detaylı Rapor**: Risk skoru ve kişiselleştirilmiş güvenlik önerileri
-- 🎨 **Modern Tasarım**: Apple-inspired minimalist ve responsive arayüz
+- 🎨 **Modern Tasarım**: Apple minimalist + siber güvenlik karma dark theme, glassmorphism efektler
 - 🇹🇷 **Türkçe Destek**: Tam Türkçe arayüz ve açıklamalar
 - ⚡ **Gerçek Zamanlı**: Anlık tarama ve sonuç görüntüleme
 
@@ -80,19 +80,23 @@ http://localhost:5173
 ## 🎨 Ekran Görüntüleri
 
 ### Ana Sayfa
-- Minimalist email input
-- Apple-style tasarım
+- Apple minimalist + siber güvenlik karma tasarım
+- Dark theme + glassmorphism efektler
 - Smooth animasyonlar
+- Gradient background
 
 ### Tarama Ekranı
-- Gerçek zamanlı ilerleme
-- Progress indicators
-- 2 kaynak taraması
+- Dark theme + Apple style loading
+- Gerçek zamanlı ilerleme göstergesi
+- Animated spinner ve progress bars
+- 2 kaynak taraması (XposedOrNot + Gravatar)
 
 ### Rapor Sayfası
-- Risk skoru (0-100)
+- Modern dark theme + glassmorphism kartlar
+- Risk skoru (0-100 ters skala: 100=Mükemmel)
 - Detaylı breach listesi
 - Güvenlik önerileri
+- "Yeni Tarama Yap" butonu
 - Kaynak bazlı filtreleme
 
 ## 🔒 Gizlilik
