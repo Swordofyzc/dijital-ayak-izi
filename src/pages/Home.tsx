@@ -31,7 +31,7 @@ const Home = () => {
   const features = [
     {
       title: 'Hızlı Tarama',
-      description: '3 farklı kaynaktan saniyeler içinde kapsamlı tarama',
+      description: '2 farklı kaynaktan saniyeler içinde kapsamlı tarama',
       gradient: 'from-blue-500 to-blue-600',
       icon: (
         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -220,7 +220,7 @@ const Home = () => {
                 2. Tarama Başlat
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                3 farklı kaynaktan veri sızıntıları taranır
+                2 farklı kaynaktan veri sızıntıları taranır
               </p>
             </motion.div>
 
@@ -336,7 +336,6 @@ const Home = () => {
               <p className="mt-4 text-gray-600 leading-relaxed">
                 Sistem şu kaynaklardan veri toplar:<br/>
                 • <strong>XposedOrNot:</strong> 500+ veri sızıntısı veritabanı<br/>
-                • <strong>LeakIX:</strong> Açık veritabanları ve yanlış yapılandırmalar<br/>
                 • <strong>Gravatar:</strong> Kamuya açık profil bilgileri
               </p>
             </motion.details>
@@ -502,12 +501,6 @@ const Home = () => {
                 <h5 className="font-semibold text-gray-900 mb-1">XposedOrNot</h5>
                 <p className="text-sm text-gray-600">
                   500+ veri sızıntısı veritabanı
-                </p>
-              </div>
-              <div className="bg-purple-50 rounded-xl p-4 border border-purple-100">
-                <h5 className="font-semibold text-gray-900 mb-1">LeakIX</h5>
-                <p className="text-sm text-gray-600">
-                  Açık veritabanları ve yanlış yapılandırmalar
                 </p>
               </div>
               <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">

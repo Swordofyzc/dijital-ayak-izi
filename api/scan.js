@@ -51,8 +51,6 @@ module.exports = async (req, res) => {
       }
     }
 
-    // LeakIX kaldırıldı - teknik açık sunucular, son kullanıcıya uygun değil
-
     // Gravatar
     let gravatar = null;
     try {
@@ -68,12 +66,9 @@ module.exports = async (req, res) => {
     return res.status(200).json({
       email,
       breaches: breaches,
-      breachCount: breaches.length,
-      leakixLeaks: [],
-      leakixCount: 0,
+      totalBreaches: breaches.length,
       gravatar,
-      riskScore: Math.min(breaches.length * 20, 100),
-      totalBreaches: breaches.length
+      riskScore: Math.min(breaches.length * 20, 100)
     });
 
   } catch (error) {

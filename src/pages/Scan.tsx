@@ -17,7 +17,6 @@ const Scan = () => {
   const [error, setError] = useState<string | null>(null)
   const [progress, setProgress] = useState<ScanProgress[]>([
     { service: 'XposedOrNot', status: 'scanning', message: '500+ veritabanı taranıyor...' },
-    { service: 'LeakIX', status: 'scanning', message: 'Açık veritabanları taranıyor...' },
     { service: 'Gravatar', status: 'scanning', message: 'Profil bilgileri alınıyor...' }
   ])
 
@@ -64,7 +63,7 @@ const Scan = () => {
           console.log('XposedOrNot error:', err)
         }
         
-        // Backend API'ye DOĞRUDAN istek at (LeakIX için)
+        // Backend API'ye istek at (Gravatar için)
         const response = await fetch('/api/scan', {
           method: 'POST',
           headers: {
@@ -93,7 +92,6 @@ const Scan = () => {
         console.log('🔍 Breaches Array:', result.breaches)
         console.log('🔍 Breaches Length:', result.breaches?.length)
         console.log('🔍 XposedOrNot breaches:', result.breaches?.filter((b: any) => b.source === 'XposedOrNot'))
-        console.log('🔍 LeakIX breaches:', result.breaches?.filter((b: any) => b.source === 'LeakIX'))
         
         // Progress'i güncelle
         if (result.progress && Array.isArray(result.progress)) {

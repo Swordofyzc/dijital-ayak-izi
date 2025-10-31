@@ -20,7 +20,6 @@ E-posta adresinizin bilinen veri sızıntılarında olup olmadığını kontrol 
 ## 🎯 Tarama Kaynakları
 
 - **XposedOrNot**: 500+ veri sızıntısı veritabanı
-- **LeakIX**: Açık veritabanları ve güvenlik açıkları
 - **Gravatar**: Kamuya açık profil bilgileri
 
 ## 🛠️ Teknolojiler
@@ -57,19 +56,12 @@ cd dijital-ayak-izi
 npm install
 ```
 
-3. **Environment variables ayarlayın**
-
-`.env` dosyası oluşturun (local test için - opsiyonel):
-```env
-LEAKIX_API_KEY=your_api_key_here
-```
-
-4. **Development modda çalıştırın**
+3. **Development modda çalıştırın**
 ```bash
 npm run dev
 ```
 
-5. **Tarayıcıda açın**
+4. **Tarayıcıda açın**
 ```
 http://localhost:5173
 ```
@@ -83,11 +75,7 @@ http://localhost:5173
 ### Manuel Deploy
 
 1. GitHub reposunu Vercel'e import edin
-2. Environment Variable ekleyin:
-```
-   LEAKIX_API_KEY=your_api_key_here
-```
-3. Deploy butonuna basın!
+2. Deploy butonuna basın!
 
 ## 🎨 Ekran Görüntüleri
 
@@ -99,7 +87,7 @@ http://localhost:5173
 ### Tarama Ekranı
 - Gerçek zamanlı ilerleme
 - Progress indicators
-- 3 kaynak taraması
+- 2 kaynak taraması
 
 ### Rapor Sayfası
 - Risk skoru (0-100)
@@ -128,7 +116,6 @@ http://localhost:5173
 Bu proje aşağıdaki açık kaynak API'leri kullanır:
 
 - [XposedOrNot](https://xposedornot.com) - Veri sızıntısı kontrolü
-- [LeakIX](https://leakix.net) - Güvenlik açıkları
 - [Gravatar](https://gravatar.com) - Profil bilgileri
 
 ## 📝 Lisans
@@ -190,14 +177,11 @@ dijital-ayak-izi/
 {
   "email": "user@example.com",
   "breaches": ["Breach1", "Breach2"],
-  "breachCount": 2,
-  "leakixLeaks": [...],
-  "leakixCount": 5,
+  "totalBreaches": 2,
   "gravatar": {...},
-  "riskScore": 70
+  "riskScore": 40
 }
 ```
-- **Environment Variable**: `LEAKIX_API_KEY`
 
 ## 🔮 Gelecek Özellikler
 

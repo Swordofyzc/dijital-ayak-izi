@@ -36,7 +36,6 @@ const Report = () => {
       console.log('📊 Sources:', scanResult.sources)
       if (scanResult.breaches) {
         console.log('🔴 XposedOrNot breaches:', (scanResult.breaches || []).filter((b: any) => b.source === 'XposedOrNot'))
-        console.log('🟣 LeakIX breaches:', (scanResult.breaches || []).filter((b: any) => b.source === 'LeakIX'))
       }
     }
   }, [scanResult, navigate])
@@ -374,10 +373,6 @@ const Report = () => {
                     gradient: 'from-red-500 to-red-600', 
                     badge: 'bg-red-100 text-red-700' 
                   }
-                  if (breach.source === 'LeakIX') return { 
-                    gradient: 'from-purple-500 to-purple-600', 
-                    badge: 'bg-purple-100 text-purple-700' 
-                  }
                   return { 
                     gradient: 'from-red-500 to-red-600', 
                     badge: 'bg-red-100 text-red-700' 
@@ -477,7 +472,7 @@ const Report = () => {
 
                       {/* Kaynak Badge (Türkçe) */}
                       <span className={`px-4 py-2 rounded-xl text-sm font-semibold ${sourceConfig.badge}`}>
-                        {breach.source === 'XposedOrNot' ? 'XposedOrNot' : breach.source === 'LeakIX' ? 'LeakIX' : breach.source}
+                        {breach.source === 'XposedOrNot' ? 'XposedOrNot' : breach.source}
                       </span>
                     </div>
 
@@ -838,12 +833,6 @@ const Report = () => {
                   <h5 className="font-semibold text-gray-900 mb-1">XposedOrNot</h5>
                   <p className="text-sm text-gray-600">
                     500+ veri sızıntısı veritabanı
-                  </p>
-                </div>
-                <div className="bg-purple-50 rounded-xl p-4 border border-purple-100">
-                  <h5 className="font-semibold text-gray-900 mb-1">LeakIX</h5>
-                  <p className="text-sm text-gray-600">
-                    Açık veritabanları ve yanlış yapılandırmalar
                   </p>
                 </div>
                 <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
