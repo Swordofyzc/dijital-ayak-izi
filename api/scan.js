@@ -53,70 +53,62 @@ module.exports = async (req, res) => {
       }
     }
 
-    // LeakIX taraması
-    console.log('=== LEAKİX BAŞLIYOR ===');
+    // === LEAKİX BAŞLIYOR ===
     let leakixLeaks = [];
     try {
       const leakixRes = await axios.get(
         `https://leakix.net/search?scope=leak&q=${encodeURIComponent(email)}`,
         { 
-          headers: { 'api-key': leakixKey },
+          headers: { 'api-key': process.env.LEAKIX_API_KEY },
           timeout: 10000
         }
       );
       
       if (Array.isArray(leakixRes.data)) {
-        leakixLeaks = leakixRes.data.map((leak, index) => {
-          // ORİJİNAL ismini koru ama temizle
-          let cleanName = leak.event_source || `Veri Sızıntısı #${index + 1}`;
-          
-          // Sadece gerçekten çok uzun/teknik olanları temizle
-          if (cleanName.length > 50) {
-            // URL varsa domain'i al
+        // SADECE İLK 5 SONUCU AL
+        const limitedData = leakixRes.data.slice(0, 5);
+        
+        // SADECE ANLAMLI OLANLARI FİLTRELE
+        leakixLeaks = limitedData
+          .filter(leak => {
+            const hasValidSource = leak.event_source && 
+                                   leak.event_source.length > 3 &&
+                                   !leak.event_source.includes('Apache Status') &&
+                                   !leak.event_source.includes('Server Status');
+            return hasValidSource;
+          })
+          .map(leak => {
+            let cleanName = leak.event_source || 'Veri Sızıntısı';
+            
+            if (cleanName.includes('Git')) cleanName = 'Git Deposu Sızıntısı';
+            if (cleanName.includes('Config') || cleanName.includes('Plugin')) cleanName = 'Yapılandırma Sızıntısı';
+            
             if (cleanName.includes('http')) {
               try {
                 const url = new URL(cleanName);
-                cleanName = `${url.hostname} - Sızıntı`;
+                cleanName = url.hostname;
               } catch {
-                cleanName = 'Web Servisi Sızıntısı';
+                cleanName = 'Web Sızıntısı';
               }
             }
-          }
-          
-          // IP adresi ise temizle
-          if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.test(cleanName)) {
-            cleanName = `IP Tabanlı Sızıntı (${cleanName.split(':')[0]})`;
-          }
-          
-          // Tarih
-          let formattedDate = 'Tarih Bilinmiyor';
-          if (leak.time) {
-            try {
-              formattedDate = new Date(leak.time).toLocaleDateString('tr-TR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              });
-            } catch (e) {
-              formattedDate = leak.time.split('T')[0];
+            
+            let formattedDate = 'Tarih Bilinmiyor';
+            if (leak.time) {
+              try {
+                formattedDate = new Date(leak.time).toLocaleDateString('tr-TR');
+              } catch {
+                formattedDate = leak.time.split('T')[0];
+              }
             }
-          }
-          
-          // Açıklama - leak.summary varsa ilk 150 karakterini al
-          let description = '';
-          if (leak.summary && leak.summary.length > 0) {
-            description = leak.summary.substring(0, 150);
-            if (leak.summary.length > 150) description += '...';
-          }
-          
-          return {
-            name: cleanName,
-            source: 'LeakIX',
-            date: formattedDate,
-            description: description,
-            dataClasses: leak.leak_data || []
-          };
-        });
+            
+            return {
+              name: cleanName,
+              source: 'LeakIX',
+              date: formattedDate,
+              description: '',
+              dataClasses: []
+            };
+          });
       }
     } catch (err) {
       console.log('LeakIX error:', err.message);
