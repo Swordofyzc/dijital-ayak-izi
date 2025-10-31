@@ -22,8 +22,6 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Email gerekli' });
     }
 
-    const leakixKey = process.env.LEAKIX_API_KEY;
-
     // XposedOrNot taraması
     console.log('=== XPOSEDORNOT BAŞLIYOR ===');
     let breaches = [];
@@ -53,66 +51,7 @@ module.exports = async (req, res) => {
       }
     }
 
-    // === LEAKİX BAŞLIYOR ===
-    let leakixLeaks = [];
-    try {
-      const leakixRes = await axios.get(
-        `https://leakix.net/search?scope=leak&q=${encodeURIComponent(email)}`,
-        { 
-          headers: { 'api-key': process.env.LEAKIX_API_KEY },
-          timeout: 10000
-        }
-      );
-      
-      if (Array.isArray(leakixRes.data)) {
-        // SADECE İLK 5 SONUCU AL
-        const limitedData = leakixRes.data.slice(0, 5);
-        
-        // SADECE ANLAMLI OLANLARI FİLTRELE
-        leakixLeaks = limitedData
-          .filter(leak => {
-            const hasValidSource = leak.event_source && 
-                                   leak.event_source.length > 3 &&
-                                   !leak.event_source.includes('Apache Status') &&
-                                   !leak.event_source.includes('Server Status');
-            return hasValidSource;
-          })
-          .map(leak => {
-            let cleanName = leak.event_source || 'Veri Sızıntısı';
-            
-            if (cleanName.includes('Git')) cleanName = 'Git Deposu Sızıntısı';
-            if (cleanName.includes('Config') || cleanName.includes('Plugin')) cleanName = 'Yapılandırma Sızıntısı';
-            
-            if (cleanName.includes('http')) {
-              try {
-                const url = new URL(cleanName);
-                cleanName = url.hostname;
-              } catch {
-                cleanName = 'Web Sızıntısı';
-              }
-            }
-            
-            let formattedDate = 'Tarih Bilinmiyor';
-            if (leak.time) {
-              try {
-                formattedDate = new Date(leak.time).toLocaleDateString('tr-TR');
-              } catch {
-                formattedDate = leak.time.split('T')[0];
-              }
-            }
-            
-            return {
-              name: cleanName,
-              source: 'LeakIX',
-              date: formattedDate,
-              description: '',
-              dataClasses: []
-            };
-          });
-      }
-    } catch (err) {
-      console.log('LeakIX error:', err.message);
-    }
+    // LeakIX kaldırıldı - teknik açık sunucular, son kullanıcıya uygun değil
 
     // Gravatar
     let gravatar = null;
@@ -126,17 +65,15 @@ module.exports = async (req, res) => {
       console.log('Gravatar error:', err.message);
     }
 
-    const riskScore = Math.min((breaches.length + leakixLeaks.length) * 10, 100);
-
     return res.status(200).json({
       email,
-      breaches: [...(breaches || []), ...(leakixLeaks || [])],
+      breaches: breaches,
       breachCount: breaches.length,
-      leakixLeaks: leakixLeaks || [],
-      leakixCount: leakixLeaks.length,
+      leakixLeaks: [],
+      leakixCount: 0,
       gravatar,
-      riskScore,
-      totalBreaches: breaches.length + leakixLeaks.length
+      riskScore: Math.min(breaches.length * 20, 100),
+      totalBreaches: breaches.length
     });
 
   } catch (error) {
